@@ -4,7 +4,7 @@ import Mobilise.bookapi.User.Dto.UpdateUserDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
 import Mobilise.bookapi.Utils.Handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    UserService userService;
+      private final  UserService userService;
 
     /**
      * This method get all users on the system
@@ -45,8 +45,8 @@ public class UserController {
             User user = userService.findUserById(id);
 
             return ResponseHandler.generateResponse("Successfully fetched user", HttpStatus.OK, user);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -62,8 +62,8 @@ public class UserController {
             User user = userService.updateUserById(updateUserPayload, id);
 
             return ResponseHandler.generateResponse("Successfully updated user", HttpStatus.OK, user);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -78,8 +78,8 @@ public class UserController {
             Object user = userService.deleteUserById(id);
 
             return ResponseHandler.generateResponse("Successfully deleted user", HttpStatus.OK, user);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 }

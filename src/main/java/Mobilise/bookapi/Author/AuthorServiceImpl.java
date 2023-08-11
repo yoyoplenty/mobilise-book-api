@@ -6,13 +6,15 @@ import Mobilise.bookapi.User.User;
 import Mobilise.bookapi.User.UserService;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
     /**
@@ -20,6 +22,9 @@ public class AuthorServiceImpl implements AuthorService {
      */
     private final UserService userService;
     private final AuthorRepository authorRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthorServiceImpl.class);
+
 
     public Author createAuthor(CreateAuthorDto createAuthorPayload) {
         //Using the lombok builder to instantiate objects

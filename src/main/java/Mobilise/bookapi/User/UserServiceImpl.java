@@ -5,9 +5,9 @@ import Mobilise.bookapi.User.Dto.CreateUserDto;
 import Mobilise.bookapi.User.Dto.UpdateUserDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.ConflictException;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,10 +15,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl  implements UserService{
 
-    @Autowired
-    UserRepository userRepository;
+    /**
+     * Inject all needed dependencies using the lombok constructor injection
+     */
+   private final UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 

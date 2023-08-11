@@ -8,6 +8,8 @@ import Mobilise.bookapi.Book.Dto.UpdateBookDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.ConflictException;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ public class BookServiceImpl implements BookService{
      */
     private final AuthorService authorService;
     private final BookRepository bookRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     public Book createBook(CreateBookDto createBookPayload) {
         Optional<Book> bookPresent = bookRepository.findByTitleAndPublicationYear(createBookPayload.getTitle(),
