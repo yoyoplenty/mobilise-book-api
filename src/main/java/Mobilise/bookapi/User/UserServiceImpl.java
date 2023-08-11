@@ -1,10 +1,10 @@
 package Mobilise.bookapi.User;
 
-
 import Mobilise.bookapi.Enums.RoleEnum;
 import Mobilise.bookapi.User.Dto.CreateUserDto;
 import Mobilise.bookapi.User.Dto.UpdateUserDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.ConflictException;
+import Mobilise.bookapi.Utils.Handlers.Exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,18 +52,30 @@ public class UserServiceImpl  implements UserService{
     }
 
     public List<User> findAllUsers() {
-        return null;
+        return userRepository.findAll();
     }
 
     public User findUserById(UUID id) {
-        return null;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User Not Found with"));
     }
 
     public User updateUserById(UpdateUserDto updateUserPayload, UUID id) {
-        return null;
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User Not Found with"));
+
+        user.setFirstName(updateUserPayload.getFirstName());
+        user.setLastName(updateUserPayload.getLastName());
+        user.setIsActive(updateUserPayload.getIsActive());
+
+        return userRepository.save(user);
     }
 
     public Object deleteUserById(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        userRepository.delete(user);
         return null;
     }
 }

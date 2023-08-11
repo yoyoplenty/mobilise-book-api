@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,6 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
     public Author createAuthor(CreateAuthorDto createAuthorPayload) {
+        //Using the lombok builder to instantiate objects
         Author author = Author.builder()
                 .specialization(createAuthorPayload.getSpecialization())
                 .dateOfBirth(createAuthorPayload.getDateOfBirth())
@@ -53,8 +53,17 @@ public class AuthorServiceImpl implements AuthorService {
     public Author findAuthorInBook(UUID authorId,  UUID bookId) {
         return authorRepository.findAuthorInBook(authorId, bookId);
     }
+
     public Author updateAuthorById(UpdateAuthorDto updateAuthorPayload, UUID id) {
-        return null;
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        author.setSpecialization(updateAuthorPayload.getSpecialization());
+        author.setDateOfBirth(updateAuthorPayload.getDateOfBirth());
+
+        userService.updateUserById(updateAuthorPayload, author.getUser().getId());
+
+        return authorRepository.save(author);
     }
 
     public Object deleteAuthorById(UUID id) {
