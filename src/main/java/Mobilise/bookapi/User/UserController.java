@@ -1,6 +1,7 @@
 package Mobilise.bookapi.User;
 
 import Mobilise.bookapi.User.Dto.UpdateUserDto;
+import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
 import Mobilise.bookapi.Utils.Handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,8 @@ public class UserController {
             List<User> users = userService.findAllUsers();
 
             return ResponseHandler.generateResponse("Successfully fetched users", HttpStatus.OK, users);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 

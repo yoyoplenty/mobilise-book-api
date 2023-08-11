@@ -4,6 +4,7 @@ import Mobilise.bookapi.Author.Dto.CreateAuthorDto;
 import Mobilise.bookapi.Author.Dto.UpdateAuthorDto;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AuthorService {

@@ -15,7 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-
+/**
+ * This are required annotations, mainly a lombok package to reduce boilerplate's
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -34,7 +36,7 @@ public class Author {
     private LocalDate dateOfBirth;
 
     @OneToOne(cascade = {CascadeType.MERGE,
-            CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.ALL}, fetch = FetchType.EAGER)
+            CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.ALL}, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -3,22 +3,27 @@ package Mobilise.bookapi.Author;
 
 import Mobilise.bookapi.Author.Dto.CreateAuthorDto;
 import Mobilise.bookapi.Author.Dto.UpdateAuthorDto;
+import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
 import Mobilise.bookapi.Utils.Handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/authors")
+@Validated
 public class AuthorController {
 
-    @Autowired
-    AuthorService authorService;
+
+    private final AuthorService authorService;
 
     /**
      * This method creates a new author, and this is done by the Admin
@@ -31,8 +36,8 @@ public class AuthorController {
             Author author = authorService.createAuthor(createAuthorPayload);
 
             return ResponseHandler.generateResponse("Successfully created author", HttpStatus.OK, author);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -46,8 +51,8 @@ public class AuthorController {
             List<Author> authors = authorService.findAllAuthors();
 
             return ResponseHandler.generateResponse("Successfully fetched authors", HttpStatus.OK, authors);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -57,13 +62,13 @@ public class AuthorController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOneAuthor(@PathVariable UUID id) {
+    public ResponseEntity<Object> findOneAuthor(@PathVariable("id") UUID id) {
         try {
             Author author = authorService.findAuthorById(id);
 
             return ResponseHandler.generateResponse("Successfully fetched author", HttpStatus.OK, author);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -78,8 +83,8 @@ public class AuthorController {
             List<Author> authors = authorService.findAuthorsBookById(bookId);
 
             return ResponseHandler.generateResponse("Successfully fetched authors", HttpStatus.OK, authors);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -95,8 +100,8 @@ public class AuthorController {
             Author author = authorService.updateAuthorById(updateAuthorPayload, id);
 
             return ResponseHandler.generateResponse("Successfully updated author", HttpStatus.OK, author);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -111,8 +116,8 @@ public class AuthorController {
             Object author = authorService.deleteAuthorById(id);
 
             return ResponseHandler.generateResponse("Successfully deleted author", HttpStatus.OK, author);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 }
