@@ -1,6 +1,5 @@
 package Mobilise.bookapi.Author;
 
-
 import Mobilise.bookapi.Author.Dto.CreateAuthorDto;
 import Mobilise.bookapi.Author.Dto.UpdateAuthorDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
@@ -13,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -80,7 +78,7 @@ public class AuthorController {
     @GetMapping("/books/{bookId}")
     public ResponseEntity<Object> findAllAuthorsByBookId(@PathVariable UUID bookId) {
         try {
-            List<Author> authors = authorService.findAuthorsBookById(bookId);
+            List<Author> authors = authorService.findAuthorsByBookId(bookId);
 
             return ResponseHandler.generateResponse("Successfully fetched authors", HttpStatus.OK, authors);
         } catch (CustomException ex) {

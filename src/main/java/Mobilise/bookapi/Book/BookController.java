@@ -1,8 +1,8 @@
 package Mobilise.bookapi.Book;
 
-
 import Mobilise.bookapi.Book.Dto.CreateBookDto;
 import Mobilise.bookapi.Book.Dto.UpdateBookDto;
+import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
 import Mobilise.bookapi.Utils.Handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class BookController {
      * @return
      */
     @PostMapping()
-    public ResponseEntity<Object> createBook(@RequestBody @Valid CreateBookDto createBookPayload) {
+    public ResponseEntity<Object> createBook(@Valid @RequestBody  CreateBookDto createBookPayload) {
         try {
             Book book = bookService.createBook(createBookPayload);
 
             return ResponseHandler.generateResponse("Successfully created book", HttpStatus.OK, book);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -45,8 +45,8 @@ public class BookController {
             List<Book> books = bookService.findAllBooks();
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, books);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -61,8 +61,8 @@ public class BookController {
             Book book = bookService.findBookById(id);
 
             return ResponseHandler.generateResponse("Successfully fetched book", HttpStatus.OK, book);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -77,8 +77,8 @@ public class BookController {
             List<Book> books = bookService.findBookByAuthorsId(authorId);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, books);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -94,8 +94,19 @@ public class BookController {
             Book book = bookService.updateBookById(updateBookPayload, id);
 
             return ResponseHandler.generateResponse("Successfully updated book", HttpStatus.OK, book);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) UUID authorId) {
+        try {
+            Object book = title != null ? bookService.findBookByTitle(title): bookService.findBookByAuthorsId(authorId);
+
+            return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, book);
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -110,8 +121,8 @@ public class BookController {
             Object book = bookService.deleteBookById(id);
 
             return ResponseHandler.generateResponse("Successfully deleted book", HttpStatus.OK, book);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 }

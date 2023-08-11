@@ -13,7 +13,9 @@ public interface BookService {
 
     Book findBookById(UUID id);
 
-    List<Book> findBookByAuthorsId(UUID authorId);
+     Book findBookByTitle(String title);
+
+     List<Book> findBookByAuthorsId(UUID authorId);
 
     Book updateBookById(UpdateBookDto updateBookPayload, UUID id);
 

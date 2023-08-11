@@ -14,7 +14,9 @@ public interface AuthorService {
 
     Author findAuthorById(UUID id);
 
-    List<Author> findAuthorsBookById(UUID id);
+    Author findAuthorInBook(UUID id, UUID bookId);
+
+    List<Author> findAuthorsByBookId(UUID id);
 
     Author updateAuthorById(UpdateAuthorDto updateAuthorPayload, UUID id);
 

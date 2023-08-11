@@ -31,9 +31,9 @@ public class Book {
     private String description;
 
     @Column(name = "publication_year")
-    private String publicationYear;
+    private int publicationYear;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "author_book",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))

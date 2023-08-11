@@ -9,13 +9,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    //Inject the UserService with the lombok constructor injection
+    /**
+     * Inject all needed dependencies using the lombok constructor injection
+     */
     private final UserService userService;
     private final AuthorRepository authorRepository;
 
@@ -43,10 +46,13 @@ public class AuthorServiceImpl implements AuthorService {
                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    public List<Author> findAuthorsBookById(UUID bookId) {
-        return authorRepository.findByBooks_Id(bookId);
+    public List<Author> findAuthorsByBookId(UUID bookId) {
+        return authorRepository.findAuthorsByBookId(bookId);
     }
 
+    public Author findAuthorInBook(UUID authorId,  UUID bookId) {
+        return authorRepository.findAuthorInBook(authorId, bookId);
+    }
     public Author updateAuthorById(UpdateAuthorDto updateAuthorPayload, UUID id) {
         return null;
     }
