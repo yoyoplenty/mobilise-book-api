@@ -8,6 +8,8 @@ import Mobilise.bookapi.Book.Dto.UpdateBookDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.ConflictException;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,8 +41,8 @@ public class BookServiceImpl implements BookService{
       return bookRepository.save(book);
     }
 
-    public List<Book> findAllBooks() {
-        return bookRepository.findAll();
+    public Page<Book> findAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     public Book findBookById(UUID id) {
@@ -56,7 +58,6 @@ public class BookServiceImpl implements BookService{
     public List<Book> findBookByAuthorsId(UUID authorId) {
         return bookRepository.findAllBooksByAuthorId(authorId);
     }
-
 
     public Book updateBookById(UpdateBookDto updateBookPayload, UUID id) {
         Book book = bookRepository.findById(id)

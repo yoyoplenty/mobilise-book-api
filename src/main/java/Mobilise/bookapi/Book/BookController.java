@@ -5,7 +5,9 @@ import Mobilise.bookapi.Book.Dto.UpdateBookDto;
 import Mobilise.bookapi.Utils.Handlers.Exceptions.CustomException;
 import Mobilise.bookapi.Utils.Handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/books")
+@RequiredArgsConstructor
 public class BookController {
-    @Autowired
-    BookService bookService;
+
+    private final BookService bookService;
 
     /**
      * This method creates new book and attach all authors to the books created
@@ -40,9 +43,9 @@ public class BookController {
      * @return
      */
     @GetMapping()
-    public ResponseEntity<Object> findAllBooks() {
+    public ResponseEntity<Object> findAllBooks(Pageable pageable) {
         try {
-            List<Book> books = bookService.findAllBooks();
+            Page<Book> books = bookService.findAllBooks(pageable);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, books);
         } catch (CustomException ex) {
