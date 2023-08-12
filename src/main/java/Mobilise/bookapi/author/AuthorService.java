@@ -4,10 +4,11 @@ import Mobilise.bookapi.author.dto.CreateAuthorDto;
 import Mobilise.bookapi.author.dto.UpdateAuthorDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface AuthorService {
-    Author createAuthor(CreateAuthorDto createAuthorPayload);
+    Map<String, Object> createAuthor(CreateAuthorDto createAuthorPayload);
 
     List<Author> findAllAuthors();
 

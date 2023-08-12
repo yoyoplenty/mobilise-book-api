@@ -6,6 +6,7 @@ import Mobilise.bookapi.utils.handlers.Exceptions.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,7 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final AuthException unauthorizedHandler;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
@@ -31,8 +33,12 @@ public class SecurityConfiguration {
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->
                         auth
-                                .requestMatchers("api/v1/auth/**")
-                                .permitAll()
+                                .requestMatchers("api/v1/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "api/v1/authors").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "api/v1/authors").hasAnyAuthority("ADMIN", "AUTHOR")
+                                .requestMatchers(HttpMethod.DELETE, "api/v1/authors").hasAnyAuthority("ADMIN", "AUTHOR")
+//                                .requestMatchers(HttpMethod.POST, "api/v1/books").hasAuthority("ADMIN")
+                                .requestMatchers("api/v1/books/**").permitAll()
                                 .anyRequest()
                                 .authenticated()
                 );

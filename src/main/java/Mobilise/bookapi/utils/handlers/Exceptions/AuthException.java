@@ -33,7 +33,7 @@ public class AuthException implements AuthenticationEntryPoint {
 
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         body.put("error", authException.getMessage());
-        body.put("path", request.getServletPath());
+        body.put("data", null);
 
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);

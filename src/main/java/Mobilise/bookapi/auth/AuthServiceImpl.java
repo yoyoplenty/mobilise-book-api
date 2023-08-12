@@ -9,7 +9,6 @@ import Mobilise.bookapi.utils.handlers.Exceptions.CustomException;
 import Mobilise.bookapi.utils.services.JwtService;
 import Mobilise.bookapi.utils.services.TokenService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.bridge.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,15 +34,20 @@ public class AuthServiceImpl implements AuthService {
 
 
     public Map<String, Object> register(CreateUserDto createUserPayload) {
-        return userService.createUser(createUserPayload);
+        User user =  userService.createUser(createUserPayload);
+        String verificationToken = tokenService.encodeToken(user.getConfirmToken());
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("verification_token", verificationToken);
+        data.put("user", user);
+
+        return data;
     }
 
     public Map<String, Object> login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getEmail(),
-                        loginDto.getPassword()
-                )
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(),  loginDto.getPassword())
         );
 
         User user = (User) authentication.getPrincipal();
@@ -56,7 +60,6 @@ public class AuthServiceImpl implements AuthService {
         Map<String, Object> data = new HashMap<>();
         data.put("accessToken", jwt);
         data.put("user", authentication.getPrincipal());
-        data.put("authorities", authentication.getAuthorities());
 
         return data;
     }
@@ -74,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
     public Map<String, Object> resendEmail(String email) {
         User user = userService.findUserByEmail(email);
         if (user.getIsActive())
-            throw new IllegalStateException("user already active");
+            throw new CustomException("user already active", HttpStatus.BAD_REQUEST);
 
         String verificationToken = tokenService.encodeToken(user.getConfirmToken());
 

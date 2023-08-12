@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface UserService {
-    Map<String, Object> createUser(CreateUserDto createUserPayload);
+    User createUser(CreateUserDto createUserPayload);
 
     List<User> findAllUsers();
 

@@ -5,6 +5,7 @@ import Mobilise.bookapi.auth.dto.LoginDto;
 import Mobilise.bookapi.auth.dto.ResetPasswordDto;
 import Mobilise.bookapi.user.dto.CreateUserDto;
 import Mobilise.bookapi.user.User;
+import Mobilise.bookapi.utils.handlers.Exceptions.CustomException;
 import Mobilise.bookapi.utils.handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class AuthController {
     @PostMapping("register")
     public ResponseEntity<Object> Register(@Valid @RequestBody CreateUserDto createUserPayload) {
         try {
-            Object user = authService.register(createUserPayload);
+            Object data = authService.register(createUserPayload);
 
-            return ResponseHandler.generateResponse("Successfully created user!", HttpStatus.OK, user);
+            return ResponseHandler.generateResponse("Successfully created user!", HttpStatus.OK, data);
         } catch (Exception e) {
             return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
         }
@@ -37,8 +38,8 @@ public class AuthController {
             Object data = authService.login(loginDto);
 
             return ResponseHandler.generateResponse("Successfully signed in!", HttpStatus.OK, data);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -48,30 +49,30 @@ public class AuthController {
             User user = authService.verifyEmail(token);
 
             return ResponseHandler.generateResponse("Successfully confirmed email!", HttpStatus.OK, user);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
-    @PostMapping("resend-email/{email}")
+    @GetMapping("resend-email/{email}")
     public ResponseEntity<Object> resendEmail(@PathVariable String email) {
         try {
             Object data = authService.resendEmail(email);
 
             return ResponseHandler.generateResponse("email successfully sent!", HttpStatus.OK, data);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
-    @PostMapping("forget-password/{email}")
+    @GetMapping("forget-password/{email}")
     public ResponseEntity<Object> forgetPassword(@PathVariable String email) {
         try {
             Object data = authService.forgetPassword(email);
 
             return ResponseHandler.generateResponse("forget password email sent!", HttpStatus.OK, data);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 
@@ -81,8 +82,8 @@ public class AuthController {
             Object data = authService.resetPassword(token, resetPasswordPayload);
 
             return ResponseHandler.generateResponse("password reset successful", HttpStatus.OK, data);
-        } catch (Exception e) {
-            return ResponseHandler.generateResponse(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage());
+        } catch (CustomException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
     }
 }

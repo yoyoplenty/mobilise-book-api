@@ -31,9 +31,9 @@ public class AuthorController {
     @PostMapping()
     public ResponseEntity<Object> createAuthor( @Valid @RequestBody CreateAuthorDto createAuthorPayload) {
         try {
-            Author author = authorService.createAuthor(createAuthorPayload);
+            Object data = authorService.createAuthor(createAuthorPayload);
 
-            return ResponseHandler.generateResponse("Successfully created author", HttpStatus.OK, author);
+            return ResponseHandler.generateResponse("Successfully created author", HttpStatus.OK, data);
         } catch (CustomException ex) {
             return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }

@@ -26,6 +26,5 @@ public class CreateUserDto {
     @NotEmpty(message = "password cannot be empty")
     private String password;
 
-    //TODO Role is only to be provided when the logged in user is an Admin
     private RoleEnum role;
 }
