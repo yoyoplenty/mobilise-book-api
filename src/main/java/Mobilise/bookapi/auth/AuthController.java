@@ -21,6 +21,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * This controller method creates a new user/Administrator account
+     * @param createUserPayload
+     * @return
+     */
     @PostMapping("register")
     public ResponseEntity<Object> Register(@Valid @RequestBody CreateUserDto createUserPayload) {
         try {
@@ -43,6 +48,11 @@ public class AuthController {
         }
     }
 
+    /**
+     * This method allows all user have the ability to login
+     * @param token
+     * @return
+     */
     @GetMapping("verify-email/{token}")
     public ResponseEntity<Object> confirmEmail(@PathVariable String token) {
         try {
@@ -54,6 +64,11 @@ public class AuthController {
         }
     }
 
+    /**
+     * This method allows unverified users resend a verification email
+     * @param email
+     * @return
+     */
     @GetMapping("resend-email/{email}")
     public ResponseEntity<Object> resendEmail(@PathVariable String email) {
         try {
@@ -65,6 +80,11 @@ public class AuthController {
         }
     }
 
+    /**
+     * This method allows a user get a resent verification email
+     * @param email
+     * @return
+     */
     @GetMapping("forget-password/{email}")
     public ResponseEntity<Object> forgetPassword(@PathVariable String email) {
         try {
@@ -76,6 +96,12 @@ public class AuthController {
         }
     }
 
+    /**
+     * User can reset password through this method controller
+     * @param token
+     * @param resetPasswordPayload
+     * @return
+     */
     @PatchMapping("reset-password/{token}")
     public ResponseEntity<Object> resetPassword(@PathVariable String token, @RequestBody @Valid ResetPasswordDto resetPasswordPayload) {
         try {

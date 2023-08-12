@@ -30,21 +30,28 @@ public class BookServiceImpl implements BookService{
     private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     public Book createBook(CreateBookDto createBookPayload) {
+        //Checks if book with publication year and title already exists
         Optional<Book> bookPresent = bookRepository.findByTitleAndPublicationYear(createBookPayload.getTitle(),
                 createBookPayload.getPublicationYear());
         if(bookPresent.isPresent()) throw new ConflictException("Book with title and publication year exists");
-
+        //Instantiate object using the lombok builder
       Book book = Book.builder()
         .title(createBookPayload.getTitle())
         .description(createBookPayload.getDescription())
         .publicationYear(createBookPayload.getPublicationYear())
         .build();
 
+      //Set the authors who wrote the book to be saved
       book.setAuthors(addAuthorsToBook(createBookPayload, book));
 
       return bookRepository.save(book);
     }
 
+    /**
+     * Return all paginated book documents
+     * @param pageable
+     * @return
+     */
     public Page<Book> findAllBooks(Pageable pageable) {
         return bookRepository.findAll(pageable);
     }
@@ -63,13 +70,20 @@ public class BookServiceImpl implements BookService{
         return bookRepository.findAllBooksByAuthorId(authorId);
     }
 
+    /**
+     * Updates an existing book and also all authors to books
+     * @param updateBookPayload
+     * @param id
+     * @return
+     */
     public Book updateBookById(UpdateBookDto updateBookPayload, UUID id) {
+        //Checks if book exists
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
         if(updateBookPayload.getAuthorId() != null && updateBookPayload.getAuthorId().size() > 0 )
             book.setAuthors(addAuthorsToBook(updateBookPayload, book));
-
+        //Update books fields
         book.setTitle(updateBookPayload.getTitle());
         book.setDescription(updateBookPayload.getDescription());
         book.setPublicationYear(updateBookPayload.getPublicationYear());
@@ -77,6 +91,11 @@ public class BookServiceImpl implements BookService{
         return bookRepository.save(book);
     }
 
+    /**
+     * Deletes a book from the books table
+     * @param id
+     * @return
+     */
     public Object deleteBookById(UUID id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
@@ -85,6 +104,12 @@ public class BookServiceImpl implements BookService{
         return null;
     }
 
+    /**
+     * Custom method that checks for a valid author and adds the author to a book
+     * @param createBookPayload
+     * @param book
+     * @return
+     */
     public Set<Author> addAuthorsToBook(BookDto createBookPayload, Book book) {
         List<UUID> AuthorIds = createBookPayload.getAuthorId();
         Set<Author> authors = book.getAuthors() != null ? book.getAuthors() : new HashSet<>();

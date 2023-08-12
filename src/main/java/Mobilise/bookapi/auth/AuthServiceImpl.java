@@ -25,18 +25,24 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    /**
+     * Injects all Needed Authentication service dependencies through the lombok constructor injection
+     */
     private final JwtService jwtService;
     private final TokenService tokenService;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
+    //CUSTOM LOGGER
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
 
 
     public Map<String, Object> register(CreateUserDto createUserPayload) {
+        //Calls the userService to create a user row/entity
         User user =  userService.createUser(createUserPayload);
         String verificationToken = tokenService.encodeToken(user.getConfirmToken());
 
+        //Creates an object, so we can get the verification token, since we wont be getting a mail
         Map<String, Object> data = new HashMap<>();
 
         data.put("verification_token", verificationToken);
@@ -46,14 +52,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public Map<String, Object> login(LoginDto loginDto) {
+        //Method verifies login details(directly from spring security)
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(),  loginDto.getPassword())
         );
-
+        //checks if user is inactive or deactivated
         User user = (User) authentication.getPrincipal();
         if (!user.getIsActive())
             throw new CustomException("user is inactive or deactivated", HttpStatus.BAD_REQUEST);
-
+        //Generate jwt authentication token
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtService.generateToken(user);
 
@@ -65,16 +72,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     public User verifyEmail(String token) {
+        //Decodes the encoded verification token
         String confirmToken = tokenService.decodeToken(token);
         User user = userService.findUserByConfirmToken(confirmToken);
-
+        //Checks is user is already activated
         if (user.getIsActive())
             throw new CustomException("user already active", HttpStatus.BAD_REQUEST);
-
+        //Updates user status and deletes confirmation token
         return userService.updateUserStatus(user.getId(), true);
     }
 
     public Map<String, Object> resendEmail(String email) {
+        //Checks is user is already activated
         User user = userService.findUserByEmail(email);
         if (user.getIsActive())
             throw new CustomException("user already active", HttpStatus.BAD_REQUEST);
