@@ -7,6 +7,7 @@ import Mobilise.bookapi.utils.handlers.Responses.ResponseHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +44,11 @@ public class BookController {
      * @return
      */
     @GetMapping()
-    public ResponseEntity<Object> findAllBooks(Pageable pageable) {
+    public ResponseEntity<Object> findAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
+            Pageable pageable = PageRequest.of(page, size);
             Page<Book> books = bookService.findAllBooks(pageable);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, books);
