@@ -22,7 +22,7 @@ class BookRepositoryTest {
 
     @Test
     void itShouldFindAllBooksByAuthorId() {
-        //Given
+        //Give or Arrange
         UUID userId = UUID.randomUUID();
         UUID authorId = UUID.randomUUID();
         UUID bookId = UUID.randomUUID();
@@ -36,22 +36,14 @@ class BookRepositoryTest {
         Book book1 = Book.builder().id(bookId).title("Book 1").description("Book 1 Description").publicationYear(2020).authors(authors).build();
         Book book2 = Book.builder().id(bookId).title("Book 2").description("Book 2 Description").publicationYear(2021).authors(authors).build();
 
+        //When or Act
         List<Book> expectedBooks = List.of(book1, book2);
         when(bookRepository.findAllBooksByAuthorId(authorId)).thenReturn(expectedBooks);
-        // When
         List<Book> result = bookRepository.findAllBooksByAuthorId(authorId);
 
-        // Then
+        // Then or Assert
         assertNotNull(result);
         assertEquals(expectedBooks.size(), result.size());
         assertEquals(expectedBooks, result);
-    }
-
-    @Test
-    void itShouldFindBooksByTitleAndPublicationYear() {
-    }
-
-    @Test
-    void itShouldFindBookByTitle() {
     }
 }

@@ -4,12 +4,14 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 public class CreateBookDto extends BookDto{
     @NotEmpty(message = "book title cannot be empty")
     private String title;
