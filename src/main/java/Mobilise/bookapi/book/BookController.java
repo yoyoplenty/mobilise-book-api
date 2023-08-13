@@ -59,13 +59,14 @@ public class BookController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOneBook(@PathVariable UUID id) {
+    public ResponseEntity<Object> findOneBook(@PathVariable String id) {
         try {
-            Book book = bookService.findBookById(id);
+            UUID bookId = UUID.fromString(id);
+            Book book = bookService.findBookById(bookId);
 
             return ResponseHandler.generateResponse("Successfully fetched book", HttpStatus.OK, book);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -75,13 +76,14 @@ public class BookController {
      * @return
      */
     @GetMapping("/authors/{authorId}")
-    public ResponseEntity<Object> findAllAuthorsByBookId(@PathVariable UUID authorId) {
+    public ResponseEntity<Object> findAllAuthorsByBookId(@PathVariable String authorId) {
         try {
-            List<Book> books = bookService.findBookByAuthorsId(authorId);
+            UUID authorUuid = UUID.fromString(authorId);
+            List<Book> books = bookService.findBookByAuthorsId(authorUuid);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, books);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -92,24 +94,26 @@ public class BookController {
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateBook(@RequestBody @Valid UpdateBookDto updateBookPayload, @PathVariable UUID id) {
+    public ResponseEntity<Object> updateBook(@RequestBody @Valid UpdateBookDto updateBookPayload, @PathVariable String id) {
         try {
-            Book book = bookService.updateBookById(updateBookPayload, id);
+            UUID bookId = UUID.fromString(id);
+            Book book = bookService.updateBookById(updateBookPayload, bookId);
 
             return ResponseHandler.generateResponse("Successfully updated book", HttpStatus.OK, book);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) UUID authorId) {
+    public ResponseEntity<Object> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String authorId) {
         try {
-            Object book = title != null ? bookService.findBookByTitle(title): bookService.findBookByAuthorsId(authorId);
+            UUID authorUuid = authorId != null? UUID.fromString(authorId):null;
+            Object book = title != null ? bookService.findBookByTitle(title): bookService.findBookByAuthorsId(authorUuid);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, book);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -119,13 +123,14 @@ public class BookController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBook(@PathVariable UUID id) {
+    public ResponseEntity<Object> deleteBook(@PathVariable String id) {
         try {
-            Object book = bookService.deleteBookById(id);
+            UUID bookId = UUID.fromString(id);
+            Object book = bookService.deleteBookById(bookId);
 
             return ResponseHandler.generateResponse("Successfully deleted book", HttpStatus.OK, book);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 }

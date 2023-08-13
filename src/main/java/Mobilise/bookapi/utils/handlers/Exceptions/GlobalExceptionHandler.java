@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,6 +30,14 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(getErrorMap(error, HttpStatus.NOT_FOUND), new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidUuidException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidUuidException(InvalidUuidException ex) {
+        String error = "Invalid Uuid provided";
+
+        return new ResponseEntity<>(getErrorMap(error, HttpStatus.BAD_REQUEST), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Map<String, Object>> handleCustomException(CustomException ex) {

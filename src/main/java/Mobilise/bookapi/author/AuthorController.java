@@ -60,13 +60,14 @@ public class AuthorController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOneAuthor(@PathVariable("id") UUID id) {
+    public ResponseEntity<Object> findOneAuthor(@PathVariable("id") String id) {
         try {
-            Author author = authorService.findAuthorById(id);
+            UUID authorId = UUID.fromString(id);
+            Author author = authorService.findAuthorById(authorId);
 
             return ResponseHandler.generateResponse("Successfully fetched author", HttpStatus.OK, author);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -76,13 +77,14 @@ public class AuthorController {
      * @return
      */
     @GetMapping("/books/{bookId}")
-    public ResponseEntity<Object> findAllAuthorsByBookId(@PathVariable UUID bookId) {
+    public ResponseEntity<Object> findAllAuthorsByBookId(@PathVariable String bookId) {
         try {
-            List<Author> authors = authorService.findAuthorsByBookId(bookId);
+            UUID BookUuid = UUID.fromString(bookId);
+            List<Author> authors = authorService.findAuthorsByBookId(BookUuid);
 
             return ResponseHandler.generateResponse("Successfully fetched authors", HttpStatus.OK, authors);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -93,13 +95,14 @@ public class AuthorController {
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateAuthor(@Valid @RequestBody  UpdateAuthorDto updateAuthorPayload, @PathVariable UUID id) {
+    public ResponseEntity<Object> updateAuthor(@Valid @RequestBody  UpdateAuthorDto updateAuthorPayload, @PathVariable String id) {
         try {
-            Author author = authorService.updateAuthorById(updateAuthorPayload, id);
+            UUID authorId = UUID.fromString(id);
+            Author author = authorService.updateAuthorById(updateAuthorPayload, authorId);
 
             return ResponseHandler.generateResponse("Successfully updated author", HttpStatus.OK, author);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -109,13 +112,14 @@ public class AuthorController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteAuthor(@PathVariable UUID id) {
+    public ResponseEntity<Object> deleteAuthor(@PathVariable String id) {
         try {
-            Object author = authorService.deleteAuthorById(id);
+            UUID authorId = UUID.fromString(id);
+            Object author = authorService.deleteAuthorById(authorId);
 
             return ResponseHandler.generateResponse("Successfully deleted author", HttpStatus.OK, author);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 }

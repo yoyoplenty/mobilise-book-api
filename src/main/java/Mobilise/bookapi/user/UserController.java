@@ -40,13 +40,14 @@ public class UserController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Object> findOneUser(@PathVariable UUID id) {
+    public ResponseEntity<Object> findOneUser(@PathVariable String id) {
         try {
-            User user = userService.findUserById(id);
+            UUID userId = UUID.fromString(id);
+            User user = userService.findUserById(userId);
 
             return ResponseHandler.generateResponse("Successfully fetched user", HttpStatus.OK, user);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -57,13 +58,14 @@ public class UserController {
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody @Valid UpdateUserDto updateUserPayload, @PathVariable UUID id) {
+    public ResponseEntity<Object> updateUser(@RequestBody @Valid UpdateUserDto updateUserPayload, @PathVariable String id) {
         try {
-            User user = userService.updateUserById(updateUserPayload, id);
+            UUID userId = UUID.fromString(id);
+            User user = userService.updateUserById(updateUserPayload, userId);
 
             return ResponseHandler.generateResponse("Successfully updated user", HttpStatus.OK, user);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 
@@ -73,13 +75,14 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable String id) {
         try {
-            Object user = userService.deleteUserById(id);
+            UUID userId = UUID.fromString(id);
+            Object user = userService.deleteUserById(userId);
 
             return ResponseHandler.generateResponse("Successfully deleted user", HttpStatus.OK, user);
-        } catch (CustomException ex) {
-            return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
+        } catch (IllegalArgumentException ex) {
+            return ResponseHandler.generateResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
         }
     }
 }
