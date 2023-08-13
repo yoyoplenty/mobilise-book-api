@@ -58,7 +58,7 @@ public class AuthController {
         try {
             User user = authService.verifyEmail(token);
 
-            return ResponseHandler.generateResponse("Successfully confirmed email!", HttpStatus.OK, user);
+            return ResponseHandler.generateResponse("Successfully verified email!", HttpStatus.OK, user);
         } catch (CustomException ex) {
             return ResponseHandler.generateResponse(ex.getMessage(), ex.getErrorCode(), null);
         }
