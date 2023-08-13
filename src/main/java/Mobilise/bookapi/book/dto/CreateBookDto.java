@@ -1,9 +1,6 @@
 package Mobilise.bookapi.book.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,9 +10,11 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class CreateBookDto extends BookDto{
+    @Size(min = 2, max = 100, message = "book title should have 2 -100 characters")
     @NotEmpty(message = "book title cannot be empty")
     private String title;
 
+    @Size(min = 2, max = 512, message = "book title should have 2 -512 characters")
     @NotEmpty(message = "book description cannot be empty")
     private String description;
 
@@ -23,6 +22,8 @@ public class CreateBookDto extends BookDto{
     @Max(value = 2100, message = "Year must not exceed 2100")
     private int publicationYear;
 
-   @NotNull(message = "author id's must not be empty")
+    @Size(min = 1, max = 20, message = "author id's should be between 1 and 20")
+    @NotEmpty(message = "author value cannot be empty")
+    @NotNull(message = "author id's must not be null")
     private List<UUID> authorId;
 }

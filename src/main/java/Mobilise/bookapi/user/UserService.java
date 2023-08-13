@@ -18,9 +18,14 @@ public interface UserService {
 
     User updateUserById(UpdateUserDto updateUserPayload, UUID id);
 
-    User updateUserStatus(UUID id, Boolean status);
+    User updateUser(UUID id, User user);
+
+    User updateUserPassword(UUID id, User user, String password);
 
     Object deleteUserById(UUID id);
 
     User findUserByConfirmToken(String confirmToken);
+
+    User findUserByResetToken(String resetToken);
+
 }

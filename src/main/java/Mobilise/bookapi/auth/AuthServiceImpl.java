@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -78,8 +79,10 @@ public class AuthServiceImpl implements AuthService {
         //Checks is user is already activated
         if (user.getIsActive())
             throw new CustomException("user already active", HttpStatus.BAD_REQUEST);
+
+        user.setIsActive(true);
         //Updates user status and deletes confirmation token
-        return userService.updateUserStatus(user.getId(), true);
+        return userService.updateUser(user.getId(), user);
     }
 
     public Map<String, Object> resendEmail(String email) {
@@ -89,7 +92,6 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException("user already active", HttpStatus.BAD_REQUEST);
 
         String verificationToken = tokenService.encodeToken(user.getConfirmToken());
-
         Map<String, Object> data = new HashMap<>();
 
         data.put("verification_token", verificationToken);
@@ -98,11 +100,33 @@ public class AuthServiceImpl implements AuthService {
         return data;
     }
 
-    public String forgetPassword(String email) {
-        return null;
+    public Map<String, Object> forgetPassword(String email) {
+        User user = userService.findUserByEmail(email);
+        if (!user.getIsActive())
+            throw new CustomException("user is inactive", HttpStatus.BAD_REQUEST);
+
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+
+        User savedUser = userService.updateUser(user.getId(), user);
+        String resetToken = tokenService.encodeToken(savedUser.getResetToken());
+
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("reset_token", resetToken);
+        data.put("user", savedUser);
+
+        return data;
     }
 
-    public String resetPassword(String token, ResetPasswordDto resetPasswordPayload) {
-        return null;
+    public User resetPassword(String token, ResetPasswordDto resetPasswordPayload) {
+        if (resetPasswordPayload.getPassword().isEmpty())
+            throw new CustomException("Password must not be empty", HttpStatus.BAD_REQUEST);
+
+        String resetToken = tokenService.decodeToken(token);
+        User user = userService.findUserByResetToken(resetToken);
+
+        return userService.updateUserPassword(user.getId(),
+                user, resetPasswordPayload.getPassword());
     }
 }

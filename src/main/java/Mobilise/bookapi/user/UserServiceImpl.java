@@ -74,6 +74,12 @@ public class UserServiceImpl  implements UserService{
                 .orElseThrow(() -> new NotFoundException("User Not Found"));
     }
 
+    public User findUserByResetToken(String token) {
+        return userRepository.findByResetToken(token)
+                .orElseThrow(() -> new NotFoundException("User Not Found"));
+    }
+
+
     public User updateUserById(UpdateUserDto updateUserPayload, UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -86,12 +92,18 @@ public class UserServiceImpl  implements UserService{
         return userRepository.save(user);
     }
 
-    public User updateUserStatus(UUID id, Boolean status) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User Not Found"));
+    public User updateUser(UUID id, User user) {
 
-        user.setIsActive(status);
+        user.setResetToken(user.getResetToken());
+        user.setIsActive(user.getIsActive());
         user.setConfirmToken(null);
+
+        return userRepository.save(user);
+    }
+
+    public User updateUserPassword(UUID id, User user, String password) {
+
+        user.setPassword(passwordEncoder.encode(password));
 
         return userRepository.save(user);
     }

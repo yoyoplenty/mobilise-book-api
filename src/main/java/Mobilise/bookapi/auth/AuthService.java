@@ -16,7 +16,7 @@ public interface AuthService {
 
     public Map<String, Object> resendEmail(String email);
 
-    public String forgetPassword(String email);
+    public Map<String, Object> forgetPassword(String email);
 
-    public String resetPassword(String token, ResetPasswordDto resetPasswordPayload);
+    public User resetPassword(String token, ResetPasswordDto resetPasswordPayload);
 }
