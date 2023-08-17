@@ -23,6 +23,7 @@ public class JwtService {
 
     /**
      * This method extracts the username from the JWT claims object
+     * 
      * @param token
      * @return
      */
@@ -32,26 +33,30 @@ public class JwtService {
 
     /**
      * This method generates a new JWT token from the user details
+     * 
      * @param userDetails
      * @return
      */
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     /**
-     * This method checks if the provided JWT token is valid and also matches the user details
+     * This method checks if the provided JWT token is valid and also matches the
+     * user details
+     * 
      * @param token
      * @param userDetails
      * @return
      */
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     /**
      * Method checks if JWT is expired
+     * 
      * @param token
      * @return
      */
@@ -61,6 +66,7 @@ public class JwtService {
 
     /**
      * Method extracts jwt expiration time
+     * 
      * @param token
      * @return
      */
@@ -70,12 +76,13 @@ public class JwtService {
 
     /**
      * This method generates a new JWT token from the user details
+     * 
      * @param userDetails
      * @return
      */
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails){
+            UserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -88,6 +95,7 @@ public class JwtService {
 
     /**
      * Generic method to extract claims from user details
+     * 
      * @param token
      * @param claimsResolver
      * @return
@@ -100,6 +108,7 @@ public class JwtService {
 
     /**
      * Method extracts all JWT claims
+     * 
      * @param token
      * @return
      */
@@ -114,6 +123,7 @@ public class JwtService {
 
     /**
      * Methods gets the JWT sign in key
+     * 
      * @return
      */
     private Key getSignInKey() {

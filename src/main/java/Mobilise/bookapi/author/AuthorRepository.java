@@ -18,7 +18,6 @@ public interface AuthorRepository extends JpaRepository<Author, UUID> {
     @Query("SELECT a FROM Author a " +
             "JOIN a.books b " +
             "WHERE a.id = :authorId " +
-            "AND b.id = :bookId " )
+            "AND b.id = :bookId ")
     Author findAuthorInBook(@Param("authorId") UUID authorId, @Param("bookId") UUID bookId);
 }
-

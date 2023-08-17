@@ -15,11 +15,13 @@ public interface BookService {
 
     Book findBookById(UUID id);
 
-     Book findBookByTitle(String title);
+    Book findBookByTitle(String title);
 
-     List<Book> findBookByAuthorsId(UUID authorId);
+    List<Book> findBookByAuthorsId(UUID authorId);
 
     Book updateBookById(UpdateBookDto updateBookPayload, UUID id);
+
+    Book removeAuthorInBook(UUID authorId, UUID id);
 
     Object deleteBookById(UUID id);
 }

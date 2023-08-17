@@ -4,7 +4,6 @@ import Mobilise.bookapi.user.dto.CreateUserDto;
 import Mobilise.bookapi.user.dto.UpdateUserDto;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public interface UserService {

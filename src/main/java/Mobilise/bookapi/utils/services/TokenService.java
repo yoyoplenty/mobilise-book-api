@@ -5,8 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -18,9 +16,8 @@ public class TokenService {
 
     private static final String JWT_SECRET_KEY = "B8wYwuLu9IJM9K0cdmFhk/i0cK17snBuNjUSHIF/CFWyKrkDwDTlLOA26TquBpGI";
 
-
     public String encodeToken(String token) {
-//        String token = UUID.randomUUID().toString();
+        // String token = UUID.randomUUID().toString();
         return Jwts.builder()
                 .setSubject(token)
                 .setIssuedAt(new Date())

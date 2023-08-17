@@ -16,10 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
 @Service
 @RequiredArgsConstructor
-public class BookServiceImpl implements BookService{
+public class BookServiceImpl implements BookService {
 
     /**
      * Inject all needed dependencies using the lombok constructor injection
@@ -30,25 +29,27 @@ public class BookServiceImpl implements BookService{
     private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 
     public Book createBook(CreateBookDto createBookPayload) {
-        //Checks if book with publication year and title already exists
+        // Checks if book with publication year and title already exists
         Optional<Book> bookPresent = bookRepository.findByTitleAndPublicationYear(createBookPayload.getTitle(),
                 createBookPayload.getPublicationYear());
-        if(bookPresent.isPresent()) throw new ConflictException("Book with title and publication year exists");
-        //Instantiate object using the lombok builder
-      Book book = Book.builder()
-        .title(createBookPayload.getTitle())
-        .description(createBookPayload.getDescription())
-        .publicationYear(createBookPayload.getPublicationYear())
-        .build();
+        if (bookPresent.isPresent())
+            throw new ConflictException("Book with title and publication year exists");
+        // Instantiate object using the lombok builder
+        Book book = Book.builder()
+                .title(createBookPayload.getTitle())
+                .description(createBookPayload.getDescription())
+                .publicationYear(createBookPayload.getPublicationYear())
+                .build();
 
-      //Set the authors who wrote the book to be saved
-      book.setAuthors(addAuthorsToBook(createBookPayload, book));
+        // Set the authors who wrote the book to be saved
+        book.setAuthors(addAuthorsToBook(createBookPayload, book));
 
-      return bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     /**
      * Return all paginated book documents
+     * 
      * @param pageable
      * @return
      */
@@ -72,18 +73,19 @@ public class BookServiceImpl implements BookService{
 
     /**
      * Updates an existing book and also all authors to books
+     * 
      * @param updateBookPayload
      * @param id
      * @return
      */
     public Book updateBookById(UpdateBookDto updateBookPayload, UUID id) {
-        //Checks if book exists
+        // Checks if book exists
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        if(updateBookPayload.getAuthorId() != null && updateBookPayload.getAuthorId().size() > 0 )
+        if (updateBookPayload.getAuthorId() != null && updateBookPayload.getAuthorId().size() > 0)
             book.setAuthors(addAuthorsToBook(updateBookPayload, book));
-        //Update books fields
+        // Update books fields
         book.setTitle(updateBookPayload.getTitle());
         book.setDescription(updateBookPayload.getDescription());
         book.setPublicationYear(updateBookPayload.getPublicationYear());
@@ -91,8 +93,16 @@ public class BookServiceImpl implements BookService{
         return bookRepository.save(book);
     }
 
+    public Book removeAuthorInBook(UUID authorId, UUID id) {
+        // TODO Check if author exists in book
+        // Create a Book repository for that
+        // Remove Book;
+        return null;
+    }
+
     /**
      * Deletes a book from the books table
+     * 
      * @param id
      * @return
      */
@@ -106,6 +116,7 @@ public class BookServiceImpl implements BookService{
 
     /**
      * Custom method that checks for a valid author and adds the author to a book
+     * 
      * @param createBookPayload
      * @param book
      * @return
@@ -118,11 +129,13 @@ public class BookServiceImpl implements BookService{
             Author author = authorService.findAuthorById(authorId);
 
             Author authorPresent = authorService.findAuthorInBook(author.getId(), book.getId());
-            if (authorPresent != null) throw new ConflictException("Author already present in book " + book.getId());
+            if (authorPresent != null)
+                throw new ConflictException("Author already present in book " + book.getId());
 
             authors.add(author);
         });
 
         return authors;
     }
+
 }

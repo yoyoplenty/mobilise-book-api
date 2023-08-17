@@ -30,9 +30,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthorServiceImpl.class);
 
-
     public Map<String, Object> createAuthor(CreateAuthorDto createAuthorPayload) {
-        //Using the lombok builder to instantiate objects
+        // Using the lombok builder to instantiate objects
         Author author = Author.builder()
                 .specialization(createAuthorPayload.getSpecialization())
                 .dateOfBirth(createAuthorPayload.getDateOfBirth())
@@ -40,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         createAuthorPayload.setRole(RoleEnum.AUTHOR);
 
-        //Create a User account for the specified author
+        // Create a User account for the specified author
         User user = userService.createUser(createAuthorPayload);
         String verificationToken = tokenService.encodeToken(user.getConfirmToken());
 
@@ -54,22 +53,22 @@ public class AuthorServiceImpl implements AuthorService {
         return data;
     }
 
-    //TODO Implement Pagination
+    // TODO Implement Pagination
     public List<Author> findAllAuthors() {
         return authorRepository.findAll();
     }
 
     public Author findAuthorById(UUID id) {
-        //Find the author by the UUID if not,throw an exception
-       return authorRepository.findById(id)
-               .orElseThrow(() -> new NotFoundException("Author not found"));
+        // Find the author by the UUID if not,throw an exception
+        return authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Author not found"));
     }
 
     public List<Author> findAuthorsByBookId(UUID bookId) {
         return authorRepository.findAuthorsByBookId(bookId);
     }
 
-    public Author findAuthorInBook(UUID authorId,  UUID bookId) {
+    public Author findAuthorInBook(UUID authorId, UUID bookId) {
         return authorRepository.findAuthorInBook(authorId, bookId);
     }
 

@@ -16,7 +16,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
     @Query("SELECT b FROM Book b JOIN b.authors a WHERE a.id = :authorId")
     List<Book> findAllBooksByAuthorId(@Param("authorId") UUID authorId);
 
-    Optional<Book>findByTitleAndPublicationYear(String title, int publicationYear);
+    Optional<Book> findByTitleAndPublicationYear(String title, int publicationYear);
 
     Optional<Book> findByTitle(String title);
 }

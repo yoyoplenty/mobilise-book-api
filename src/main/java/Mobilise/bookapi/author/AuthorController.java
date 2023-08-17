@@ -20,16 +20,16 @@ import java.util.UUID;
 @Validated
 public class AuthorController {
 
-
     private final AuthorService authorService;
 
     /**
      * This method creates a new author, and this is done by the Admin
+     * 
      * @param createAuthorPayload
      * @return
      */
     @PostMapping()
-    public ResponseEntity<Object> createAuthor( @Valid @RequestBody CreateAuthorDto createAuthorPayload) {
+    public ResponseEntity<Object> createAuthor(@Valid @RequestBody CreateAuthorDto createAuthorPayload) {
         try {
             Object data = authorService.createAuthor(createAuthorPayload);
 
@@ -41,6 +41,7 @@ public class AuthorController {
 
     /**
      * This method get all authors available on the system
+     * 
      * @return
      */
     @GetMapping()
@@ -56,6 +57,7 @@ public class AuthorController {
 
     /***
      * This method finds an author by the ID provided
+     * 
      * @param id
      * @return
      */
@@ -73,6 +75,7 @@ public class AuthorController {
 
     /**
      * This method gets all authors by the book id provided
+     * 
      * @param bookId
      * @return
      */
@@ -90,12 +93,14 @@ public class AuthorController {
 
     /**
      * This method updates an author by their id
+     * 
      * @param updateAuthorPayload
      * @param id
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateAuthor(@Valid @RequestBody  UpdateAuthorDto updateAuthorPayload, @PathVariable String id) {
+    public ResponseEntity<Object> updateAuthor(@Valid @RequestBody UpdateAuthorDto updateAuthorPayload,
+            @PathVariable String id) {
         try {
             UUID authorId = UUID.fromString(id);
             Author author = authorService.updateAuthorById(updateAuthorPayload, authorId);
@@ -108,6 +113,7 @@ public class AuthorController {
 
     /**
      * This method deletes a author by their ID
+     * 
      * @param id
      * @return
      */

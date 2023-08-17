@@ -23,7 +23,7 @@ import static java.lang.annotation.ElementType.METHOD;
  */
 @Pattern(regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 
-@Target({METHOD, FIELD, PARAMETER, ANNOTATION_TYPE})
+@Target({ METHOD, FIELD, PARAMETER, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {})

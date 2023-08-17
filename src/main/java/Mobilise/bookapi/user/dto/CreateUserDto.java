@@ -11,11 +11,11 @@ import lombok.Data;
 @Data
 public class CreateUserDto {
     @Size(min = 3, max = 30, message = "first name should have 3 -30 characters")
-    @NotEmpty(message = "firstname cannot be empty")
+    @NotEmpty(message = "first name cannot be empty")
     private String firstName;
 
     @Size(min = 3, max = 15, message = "last name should have 3 -15 characters")
-    @NotBlank(message = "lastname cannot be empty")
+    @NotBlank(message = "last name cannot be empty")
     private String lastName;
 
     @Email

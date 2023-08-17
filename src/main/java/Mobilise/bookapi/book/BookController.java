@@ -25,11 +25,12 @@ public class BookController {
 
     /**
      * This method creates new book and attach all authors to the books created
+     * 
      * @param createBookPayload
      * @return
      */
     @PostMapping()
-    public ResponseEntity<Object> createBook(@Valid @RequestBody  CreateBookDto createBookPayload) {
+    public ResponseEntity<Object> createBook(@Valid @RequestBody CreateBookDto createBookPayload) {
         try {
             Book book = bookService.createBook(createBookPayload);
 
@@ -41,6 +42,7 @@ public class BookController {
 
     /**
      * This method get all books with their respective authors on the system
+     * 
      * @return
      */
     @GetMapping()
@@ -59,6 +61,7 @@ public class BookController {
 
     /***
      * This method finds a book by the ID provided
+     * 
      * @param id
      * @return
      */
@@ -76,6 +79,7 @@ public class BookController {
 
     /**
      * This method gets all book by the author id provided
+     * 
      * @param authorId
      * @return
      */
@@ -93,12 +97,14 @@ public class BookController {
 
     /**
      * This method updates a book by their id
+     * 
      * @param updateBookPayload
      * @param id
      * @return
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<Object> updateBook(@RequestBody @Valid UpdateBookDto updateBookPayload, @PathVariable String id) {
+    public ResponseEntity<Object> updateBook(@RequestBody @Valid UpdateBookDto updateBookPayload,
+            @PathVariable String id) {
         try {
             UUID bookId = UUID.fromString(id);
             Book book = bookService.updateBookById(updateBookPayload, bookId);
@@ -110,10 +116,12 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchBooks(@RequestParam(required = false) String title, @RequestParam(required = false) String authorId) {
+    public ResponseEntity<Object> searchBooks(@RequestParam(required = false) String title,
+            @RequestParam(required = false) String authorId) {
         try {
-            UUID authorUuid = authorId != null? UUID.fromString(authorId):null;
-            Object book = title != null ? bookService.findBookByTitle(title): bookService.findBookByAuthorsId(authorUuid);
+            UUID authorUuid = authorId != null ? UUID.fromString(authorId) : null;
+            Object book = title != null ? bookService.findBookByTitle(title)
+                    : bookService.findBookByAuthorsId(authorUuid);
 
             return ResponseHandler.generateResponse("Successfully fetched books", HttpStatus.OK, book);
         } catch (IllegalArgumentException ex) {
@@ -123,6 +131,7 @@ public class BookController {
 
     /**
      * This method deletes a book by their ID
+     * 
      * @param id
      * @return
      */
